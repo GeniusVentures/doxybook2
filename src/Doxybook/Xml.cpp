@@ -19,7 +19,11 @@ bool Doxybook2::Xml::Node::hasText() const {
 }
 
 std::string Doxybook2::Xml::Node::getText() const {
-    return ptr->Value();
+    const char* v = ptr->Value();
+    if (v == nullptr) {
+        return {};
+    }
+    return {v};
 }
 
 bool Doxybook2::Xml::Node::isElement() const {
@@ -88,7 +92,11 @@ bool Doxybook2::Xml::Element::hasText() const {
 }
 
 std::string Doxybook2::Xml::Element::getText() const {
-    return ptr->GetText();
+    const char* t = ptr->GetText();
+    if (t == nullptr) {
+        return {};
+    }
+    return {t};
 }
 
 Doxybook2::Xml::Node Doxybook2::Xml::Element::asNode() const {
@@ -116,5 +124,5 @@ Doxybook2::Xml::Xml(const std::string& path) : doc(new tinyxml2::XMLDocument) {
 Doxybook2::Xml::~Xml() = default;
 
 Doxybook2::Xml::Element Doxybook2::Xml::firstChildElement(const std::string& name) const {
-    return Element(doc->FirstChildElement(name.c_str()));
+    return Element(doc->FirstChildElement(name.empty() ? nullptr : name.c_str()));
 }

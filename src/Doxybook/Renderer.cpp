@@ -11,6 +11,7 @@
 #include <inja/inja.hpp>
 #include <set>
 #include <unordered_set>
+#include <filesystem>
 
 #ifdef _WIN32
 static const std::string SEPARATOR = "\\";
@@ -346,6 +347,26 @@ void Doxybook2::Renderer::render(const std::string& name, const std::string& pat
     }
 
     const auto absPath = Path::join(config.outputDir, path);
+
+    // Ensure output directory exists (create intermediate directories as needed)
+    {
+        const auto pos = absPath.find_last_of('/');
+        if (pos != std::string::npos) {
+            const auto dir = absPath.substr(0, pos);
+            if (!dir.empty()) {
+                try {
+                    std::error_code ec;
+                    std::filesystem::create_directories(std::filesystem::path(dir), ec);
+                    if (ec) {
+                        spdlog::debug("create_directories('{}') failed: {}", dir, ec.message());
+                    }
+                } catch (std::exception& e) {
+                    spdlog::debug("create_directories('{}') exception: {}", dir, e.what());
+                }
+            }
+        }
+    }
+
     if (config.debugTemplateJson) {
         std::ofstream dump(absPath + ".json");
         dump << data.dump(2);

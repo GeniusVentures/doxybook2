@@ -42,10 +42,10 @@ jobs:
             suffix: 'linux-amd64'
             generator: 'Ninja'
             arch: ''
-          - name: 'Mac OSX x64'
+          - name: 'Mac OSX x64/arm64'
             os: macos-latest
-            triplet: x64-osx
-            suffix: 'osx-amd64'
+            triplet: universal-osx
+            suffix: 'universal-osx'
             generator: 'Ninja'
             arch: ''
 
