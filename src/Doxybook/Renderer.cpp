@@ -108,6 +108,18 @@ Doxybook2::Renderer::Renderer(const Config& config,
         const auto arg = args.at(0)->get<std::string>();
         return Utils::stripNamespace(arg);
     });
+    env->add_callback("displayTitle", 1, [](inja::Arguments& args) -> std::string {
+        const auto obj = args.at(0)->get<nlohmann::json>();
+        const auto kind = obj.value("kind", "");
+        if (kind == "file" || kind == "dir") {
+            return obj.value("name", "");
+        } else {
+            const auto title = obj.value("title", "");
+            const auto stripped = Utils::stripNamespace(title);
+            const auto parts = Utils::split(stripped, "::");
+            return parts.empty() ? stripped : parts.back();
+        }
+    });
     env->add_callback("split", 2, [](inja::Arguments& args) -> nlohmann::json {
         const auto arg0 = args.at(0)->get<std::string>();
         const auto arg1 = args.at(1)->get<std::string>();
