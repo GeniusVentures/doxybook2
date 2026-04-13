@@ -1,6 +1,6 @@
 {
   "name": "doxybook2",
-  "version-string": "1.5.0",
+  "version-string": "1.6.2",
   "builtin-baseline": "1085a57da0725c19e19586025438e8c16f34c890",
   "dependencies": [
     {

@@ -4,11 +4,50 @@
         {
             "name": "Windows",
             "generator": "Visual Studio 17 2022",
-            "binaryDir": "${sourceDir}/build",
+            "binaryDir": "${sourceDir}/build/Windows",
             "cacheVariables": {
                 "CMAKE_INSTALL_PREFIX": "./install",
                 "DOXYBOOK_TESTS": "ON",
                 "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
+            }
+        },
+        {
+            "name": "OSX Release",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build/OSX/Release",
+            "cacheVariables": {
+                "CMAKE_INSTALL_PREFIX": "./install/OSX/Release",
+                "DOXYBOOK_TESTS": "ON",
+                "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
+                "VCPKG_TARGET_TRIPLET": "arm64-osx",
+                "CMAKE_OSX_ARCHITECTURES": "x86_64;arm64",
+                "CMAKE_BUILD_TYPE": "Release"
+            }
+        },
+        {
+            "name": "OSX Debug",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build/OSX/Debug",
+            "cacheVariables": {
+                "CMAKE_INSTALL_PREFIX": "./install/OSX/Debug",
+                "DOXYBOOK_TESTS": "ON",
+                "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
+                "VCPKG_TARGET_TRIPLET": "arm64-osx",
+                "CMAKE_OSX_ARCHITECTURES": "x86_64;arm64",
+                "CMAKE_BUILD_TYPE": "Debug"
+            }
+        },
+        {
+            "name": "OSX MinSizeRel",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build/OSX/MinSizeRel",
+            "cacheVariables": {
+                "CMAKE_INSTALL_PREFIX": "./install/OSX/MinSizeRel",
+                "DOXYBOOK_TESTS": "ON",
+                "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
+                "VCPKG_TARGET_TRIPLET": "arm64-osx",
+                "CMAKE_OSX_ARCHITECTURES": "x86_64;arm64",
+                "CMAKE_BUILD_TYPE": "MinSizeRel"
             }
         }
     ],

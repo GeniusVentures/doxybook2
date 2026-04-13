@@ -43,7 +43,7 @@ endif()
 
 option(DOXYBOOK_TESTS "Build Doxybook2 tests" OFF)
 
-set(CMAKE_BUILD_TYPE "MinSizeRel" CACHE STRING "Select build type")
+#set(CMAKE_BUILD_TYPE "MinSizeRel" CACHE STRING "Select build type")
 set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug" "Release" "RelWithDebInfo" "MinSizeRel")
 
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/src/Doxybook)

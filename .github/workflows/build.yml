@@ -42,12 +42,12 @@ jobs:
             suffix: 'linux-amd64'
             generator: 'Ninja'
             arch: ''
-          - name: 'Mac OSX x64/arm64'
+          - name: 'Mac OSX'
             os: macos-latest
-            triplet: universal-osx
-            suffix: 'universal-osx'
+            triplet: x64-osx
+            suffix: 'osx-universal'
             generator: 'Ninja'
-            arch: ''
+            arch: 'x86_64;arm64'
 
     steps:
       - name: Checkout
@@ -134,6 +134,7 @@ jobs:
               -DDOXYBOOK_TESTS=ON \
               -DVCPKG_TARGET_TRIPLET=${{ matrix.triplet }} \
               -DCMAKE_TOOLCHAIN_FILE=${{ env.VCPKG_ROOT }}/scripts/buildsystems/vcpkg.cmake \
+              -DCMAKE_OSX_ARCHITECTURES="${{ matrix.arch }}" \
               .
           fi
 
