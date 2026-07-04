@@ -122,6 +122,12 @@ jobs:
           echo "App version: ${APP_VERSION}"
           mkdir build
           mkdir install
+          # msvc-dev-cmd re-points VCPKG_ROOT at the VS-bundled vcpkg (a path
+          # with spaces, which then breaks the toolchain reference). Restore
+          # our bootstrapped C:/vcpkg for Windows so the toolchain resolves.
+          if [ "$RUNNER_OS" == "Windows" ]; then
+            VCPKG_ROOT="C:/vcpkg"
+          fi
           if [ "$RUNNER_OS" == "Windows" ]; then
             cmake \
               -B ./build \
@@ -130,7 +136,7 @@ jobs:
               -DCMAKE_BUILD_TYPE=MinSizeRel \
               -DDOXYBOOK_TESTS=ON \
               -DVCPKG_TARGET_TRIPLET=${{ matrix.triplet }} \
-              -DCMAKE_TOOLCHAIN_FILE=${{ env.VCPKG_ROOT }}/scripts/buildsystems/vcpkg.cmake \
+              -DCMAKE_TOOLCHAIN_FILE="${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake" \
               .
           else
             cmake \
@@ -140,7 +146,7 @@ jobs:
               -DCMAKE_BUILD_TYPE=MinSizeRel \
               -DDOXYBOOK_TESTS=ON \
               -DVCPKG_TARGET_TRIPLET=${{ matrix.triplet }} \
-              -DCMAKE_TOOLCHAIN_FILE=${{ env.VCPKG_ROOT }}/scripts/buildsystems/vcpkg.cmake \
+              -DCMAKE_TOOLCHAIN_FILE="${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake" \
               -DCMAKE_OSX_ARCHITECTURES="${{ matrix.arch }}" \
               .
           fi
