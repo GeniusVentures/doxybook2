@@ -28,14 +28,14 @@ jobs:
             os: windows-latest
             triplet: x64-windows
             suffix: 'windows-win64'
-            generator: 'Visual Studio 17 2022'
-            arch: '-A x64'
+            generator: 'Ninja'
+            msvc_arch: 'x64'
           - name: 'Windows x86'
             os: windows-latest
             triplet: x86-windows
             suffix: 'windows-win32'
-            generator: 'Visual Studio 17 2022'
-            arch: '-A Win32'
+            generator: 'Ninja'
+            msvc_arch: 'x86'
           - name: 'Linux x64'
             os: ubuntu-latest
             triplet: x64-linux
@@ -106,6 +106,12 @@ jobs:
           fi
           popd
 
+      - name: Setup MSVC toolchain
+        if: runner.os == 'Windows'
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: ${{ matrix.msvc_arch }}
+
       - name: Configure
         shell: bash
         env:
@@ -119,10 +125,11 @@ jobs:
           if [ "$RUNNER_OS" == "Windows" ]; then
             cmake \
               -B ./build \
-              -G "${{ matrix.generator }}" ${{ matrix.arch }} \
+              -G "${{ matrix.generator }}" \
               -DCMAKE_INSTALL_PREFIX=./install \
               -DCMAKE_BUILD_TYPE=MinSizeRel \
               -DDOXYBOOK_TESTS=ON \
+              -DVCPKG_TARGET_TRIPLET=${{ matrix.triplet }} \
               -DCMAKE_TOOLCHAIN_FILE=${{ env.VCPKG_ROOT }}/scripts/buildsystems/vcpkg.cmake \
               .
           else
@@ -151,11 +158,7 @@ jobs:
       - name: Compile
         shell: bash
         run: |
-          if [ "$RUNNER_OS" == "Windows" ]; then
-            cmake --build ./build --target INSTALL --config MinSizeRel
-          else
-            cmake --build ./build --target install --config MinSizeRel
-          fi
+          cmake --build ./build --target install --config MinSizeRel
 
       - name: List runtime dependencies
         shell: bash
